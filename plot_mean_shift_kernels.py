@@ -38,7 +38,11 @@ from mean_shift_ import  MeanShift
 ###############################################################################
 # Generate sample data
 centers = [[2, 0], [-2, 0]]
-X, _ = make_blobs(n_samples=10000, centers=centers, cluster_std=(1.0, 1.0))
+X1, _ = make_blobs(n_samples=1000, centers=centers, cluster_std=(1.0, 1.0))
+X2, _ = make_blobs(n_samples=100, centers=[[-1,-3]], cluster_std=0.5)
+X3, _ = make_blobs(n_samples=100, centers=[[1,3]], cluster_std=0.5)
+
+X = np.vstack([X1, X2, X3])
 
 ###############################################################################
 # Compute clustering with MeanShift
@@ -48,8 +52,7 @@ X, _ = make_blobs(n_samples=10000, centers=centers, cluster_std=(1.0, 1.0))
 # returns a value around 1.44
 bandwidth = 3
 
-ms_rbf = MeanShift(bandwidth=bandwidth, bin_seeding=True, kernel='rbf',
-                   gamma=2)
+ms_rbf = MeanShift(bandwidth=bandwidth, kernel='rbf', bin_seeding=True, gamma=2)
 ms_rbf.fit(X)
 labels_rbf = ms_rbf.labels_
 cluster_centers_rbf = ms_rbf.cluster_centers_
@@ -60,7 +63,7 @@ n_clusters_rbf = len(labels_unique_rbf)
 print("number of estimated clusters using the rbf kernel: %d" % n_clusters_rbf)
 
 
-ms_flat = MeanShift(bandwidth=bandwidth, bin_seeding=True, kernel='flat')
+ms_flat = MeanShift(bandwidth=1, kernel='flat', bin_seeding=True)
 ms_flat.fit(X)
 labels_flat = ms_flat.labels_
 cluster_centers_flat = ms_flat.cluster_centers_
